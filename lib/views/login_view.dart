@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/viewmodels/home_viewmodel.dart';
+import 'package:food_app/viewmodels/register_viewmodel.dart';
+import 'package:food_app/views/home_view.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../widgets/login_button.dart';
+import '../views/register_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -42,7 +46,18 @@ class LoginView extends StatelessWidget {
             LoginButton(
               text: 'Conectar con correo',
               icon: Icons.email,
-              onPressed: vm.loginWithEmail,
+              //onPressed: vm.loginWithEmail,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (_) => HomeViewModel(),
+                      child: HomeView(),
+                    ),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: 20),
@@ -58,7 +73,17 @@ class LoginView extends StatelessWidget {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (_) => RegisterViewmodel(),
+                      child: RegisterView(),
+                    ),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
