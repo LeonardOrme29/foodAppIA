@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/viewmodels/home_viewmodel.dart';
+import 'package:food_app/viewmodels/register_viewmodel.dart';
+import 'package:food_app/views/home_view.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../widgets/login_button.dart';
+import '../views/register_view.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -19,12 +23,12 @@ class LoginView extends StatelessWidget {
             // Logo y título
             Column(
               children: [
-                Image.asset('lib/assets/logo.png', height: 120),
-                const SizedBox(height: 10),
-                const Text('NutriScan', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                Image.asset('lib/assets/logo.png', height: 240),
+                //const SizedBox(height: 10),
+                //const Text('NutriScan', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
 
             // Botones de login
             LoginButton(
@@ -42,7 +46,10 @@ class LoginView extends StatelessWidget {
             LoginButton(
               text: 'Conectar con correo',
               icon: Icons.email,
-              onPressed: vm.loginWithEmail,
+              //onPressed: vm.loginWithEmail,
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
             ),
 
             const SizedBox(height: 20),
@@ -58,7 +65,9 @@ class LoginView extends StatelessWidget {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, '/register');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
                 padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -71,7 +80,7 @@ class LoginView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
-                  'Sesión iniciada como: ${vm.user!.name}',
+                  'Sesión iniciada como: ${vm.user!.firstname}',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
