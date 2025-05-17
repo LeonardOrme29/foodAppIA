@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_app/widgets/custom_drawer.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../viewmodels/login_viewmodel.dart';
 import '../widgets/food_card.dart';
 
 class HomeView extends StatelessWidget {
@@ -10,6 +11,8 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HomeViewModel>(context);
+    final loginViewModel = Provider.of<LoginViewModel>(context);
+    final user = loginViewModel.user;
 
     return Scaffold(
       appBar: AppBar(
@@ -19,16 +22,15 @@ class HomeView extends StatelessWidget {
             const Text("NutriScan"),
             const Spacer(),
             CircleAvatar(
-              backgroundImage: NetworkImage(
-                'https://randomuser.me/api/portraits/women/44.jpg',
-              ),
+              backgroundImage: AssetImage('lib/assets/user.jpg'),
             ),
           ],
         ),
         backgroundColor: Color(0xFF004D3D),
       ),
       drawer: const CustomDrawer(),
-      body: SingleChildScrollView(
+      body: user == null
+          ? const Center(child: Text('No hay usuario logueado')) : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -53,7 +55,7 @@ class HomeView extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Lógica aquí
+                    Navigator.pushNamed(context, '/scan');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF004D3D),
@@ -62,7 +64,7 @@ class HomeView extends StatelessWidget {
                     elevation: 5,
                   ),
                   icon: const Icon(Icons.restaurant, color:Color(0xFFFFFFFF), size: 24,),
-                  label: const Text("Identificar Plato", style: TextStyle(fontSize: 18, color:Color(0xFFFFFFFF))),
+                  label: Text('Identificar Plato para ${user.firstname}', style: TextStyle(fontSize: 18, color:Color(0xFFFFFFFF))),
                 ),
               ),
 

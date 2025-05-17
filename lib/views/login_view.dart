@@ -23,12 +23,12 @@ class LoginView extends StatelessWidget {
             // Logo y título
             Column(
               children: [
-                Image.asset('lib/assets/logo.png', height: 120),
-                const SizedBox(height: 10),
-                const Text('NutriScan', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
+                Image.asset('lib/assets/logo.png', height: 240),
+                //const SizedBox(height: 10),
+                //const Text('NutriScan', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
 
             // Botones de login
             LoginButton(
@@ -48,15 +48,7 @@ class LoginView extends StatelessWidget {
               icon: Icons.email,
               //onPressed: vm.loginWithEmail,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider(
-                      create: (_) => HomeViewModel(),
-                      child: HomeView(),
-                    ),
-                  ),
-                );
+                Navigator.pushNamed(context, '/login');
               },
             ),
 
@@ -74,15 +66,7 @@ class LoginView extends StatelessWidget {
 
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider(
-                      create: (_) => RegisterViewmodel(),
-                      child: RegisterView(),
-                    ),
-                  ),
-                );
+                Navigator.pushNamed(context, '/register');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.lightGreen,
@@ -96,7 +80,7 @@ class LoginView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
-                  'Sesión iniciada como: ${vm.user!.name}',
+                  'Sesión iniciada como: ${vm.user!.firstname}',
                   style: const TextStyle(color: Colors.white),
                 ),
               ),

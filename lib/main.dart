@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/viewmodels/home_viewmodel.dart';
+import 'package:food_app/views/home_view.dart';
+import 'package:food_app/views/login_mail_view.dart';
+import 'package:food_app/views/scan_food_view.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/login_viewmodel.dart';
+import 'viewmodels/register_viewmodel.dart';
 import 'views/login_view.dart';
+import 'views/register_view.dart';
+
 
 void main() {
-  runApp(const NutriScanApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) {
+        final vm = LoginViewModel();
+        vm.loadUserFromPreferences();  // Carga usuario guardado al iniciar
+        return vm;
+      },
+      child: NutriScanApp(),
+    ),
+  );
 }
 
 class NutriScanApp extends StatelessWidget {
@@ -12,12 +28,24 @@ class NutriScanApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(),
-      child: const MaterialApp(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => RegisterViewmodel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+      ],
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginView(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => LoginView(),
+          '/login': (context) => LoginMailView(),
+          '/register': (context) => RegisterView(),
+          '/home': (context) => HomeView(),
+          '/scan': (context) => ScanFoodView(),
+        },
       ),
     );
   }
 }
+
