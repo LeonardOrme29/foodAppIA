@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/app_Enviroment.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class RegisterViewmodel extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -41,10 +43,7 @@ class RegisterViewmodel extends ChangeNotifier {
     _errorMessage = '';
     notifyListeners();
 
-    // CAMBIA ESTA LÍNEA según tu entorno:
-    // Emulador Android: 10.0.2.2
-    // Dispositivo físico / iOS: usa tu IP local (ej. 192.168.0.101)
-    final url = Uri.parse('http://127.0.0.1:8000/register/');
+    final url = Uri.parse('${AppEnvironment.apiBaseUrl}/register/');
 
     final Map<String, String> body = {
       'firstname': firstname,
