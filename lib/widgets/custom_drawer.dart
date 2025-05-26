@@ -32,7 +32,7 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Identificar'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/profile');
+              Navigator.pushNamed(context, '/scan');
             },
           ),
           ListTile(
@@ -40,7 +40,7 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Historial'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/history');
             },
           ),
           ListTile(

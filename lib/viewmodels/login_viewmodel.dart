@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/models/app_Enviroment.dart';
 import '../models/user_model.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../services/user_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginViewModel extends ChangeNotifier {
   UserModel? _user;
@@ -30,7 +32,7 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/login/'),
+        Uri.parse('${AppEnvironment.apiBaseUrl}/login/'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': _email, 'password': _password}),
       );

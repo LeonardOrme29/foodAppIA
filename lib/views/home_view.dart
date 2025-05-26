@@ -5,6 +5,8 @@ import '../viewmodels/home_viewmodel.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../widgets/food_card.dart';
 
+
+
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
@@ -29,8 +31,7 @@ class HomeView extends StatelessWidget {
         backgroundColor: Color(0xFF004D3D),
       ),
       drawer: const CustomDrawer(),
-      body: user == null
-          ? const Center(child: Text('No hay usuario logueado')) : SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -60,11 +61,16 @@ class HomeView extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF004D3D),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                    padding: const EdgeInsets.symmetric(vertical: 16), // Sin padding horizontal fijo
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     elevation: 5,
                   ),
                   icon: const Icon(Icons.restaurant, color:Color(0xFFFFFFFF), size: 24,),
-                  label: Text('Identificar Plato para ${user.firstname}', style: TextStyle(fontSize: 18, color:Color(0xFFFFFFFF))),
+                  label: Text(
+                    user != null
+                        ? 'Identificar Plato para ${user.firstname}'
+                        : 'Identificar Plato',
+                    style: TextStyle(fontSize: 18, color:Color(0xFFFFFFFF)),
+                  ),
                 ),
               ),
 
