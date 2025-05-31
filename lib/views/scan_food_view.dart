@@ -1,68 +1,16 @@
-import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/scan_food_viewmodel.dart';
 
-class ScanFoodView extends StatefulWidget {
+class ScanFoodView extends StatelessWidget {
   const ScanFoodView({super.key});
 
   @override
-  State<ScanFoodView> createState() => _ScanFoodViewState();
-}
-
-class _ScanFoodViewState extends State<ScanFoodView> {
-  File? _selectedImage;
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImage(ImageSource source) async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(source: source);
-      if (pickedFile != null) {
-        setState(() {
-          _selectedImage = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
-      print('Error al seleccionar imagen: $e');
-      if (mounted) { // Verificar si el widget está montado antes de mostrar el SnackBar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al seleccionar imagen: $e')),
-        );
-      }
-    }
-  }
-
-  void _showImageSourceActionSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext sheetContext) {
-        return SafeArea(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Galería'),
-                onTap: () {
-                  Navigator.of(sheetContext).pop();
-                  _pickImage(ImageSource.gallery);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Cámara'),
-                onTap: () {
-                  Navigator.of(sheetContext).pop();
-                  _pickImage(ImageSource.camera);
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final vm = Provider.of<ScanFoodViewModel>(context);
+
     const Color primaryColor = Color(0xFF0A543D);
     const Color buttonColor = Color(0xFF4CAF50);
     const Color frameColor = Colors.white;
@@ -74,9 +22,7 @@ class _ScanFoodViewState extends State<ScanFoodView> {
           Positioned.fill(
             child: ClipPath(
               clipper: OvalBottomClipper(),
-              child: Container(
-                color: primaryColor,
-              ),
+              child: Container(color: primaryColor),
             ),
           ),
           Center(
@@ -84,100 +30,47 @@ class _ScanFoodViewState extends State<ScanFoodView> {
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
+                  children: [
                     const SizedBox(height: 60),
-                    Image.asset(
-                      'lib/assets/logo.png',
-                      height: 180,
-                    ),
+                    Image.asset('lib/assets/logo.png', height: 180),
                     const SizedBox(height: 16),
                     const Text(
                       'Captura o Sube una foto del plato',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(height: 32),
                     GestureDetector(
-                      onTap: () {
-                        _showImageSourceActionSheet(context);
-                      },
+                      onTap: () => _showImageSourceOptions(context, vm),
                       child: Container(
                         height: 200,
                         decoration: BoxDecoration(
                           color: frameColor,
                           borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(
-                            color: Colors.grey.shade400,
-                            width: 1.5,
-                          ),
+                          border: Border.all(color: Colors.grey.shade400, width: 1.5),
                         ),
-                        child: _selectedImage != null
-                            ? ClipRRect(
-                          borderRadius: BorderRadius.circular(10.5),
-                          child: Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        )
-                            : const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add_a_photo_outlined,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Toca para añadir una imagen',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
+                        child: vm.imagePreviewWidget(),
                       ),
                     ),
                     const SizedBox(height: 40),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: buttonColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        textStyle: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    SizedBox(
+                      width: double.infinity,
+                      height: 45, 
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: buttonColor,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20), // Mayor padding
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_selectedImage != null) {
-                          print('Subiendo imagen: ${_selectedImage!.path}');
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Subiendo: ${_selectedImage!.path}')),
-                            );
-                          }
-                        } else {
-                          print('Por favor, selecciona una imagen primero.');
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Por favor, selecciona una imagen primero.')),
-                            );
-                          }
-                        }
-                      },
-                      child: const Text(
-                        'Subir',
-                        style: TextStyle(color: Colors.white),
+                        onPressed: vm.isLoading
+                            ? null
+                            : () => vm.uploadImage(context),
+                        child: vm.isLoading
+                            ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                            : const Text('Subir', style: TextStyle(color: Colors.white)),
                       ),
                     ),
                     const SizedBox(height: 50),
@@ -190,6 +83,34 @@ class _ScanFoodViewState extends State<ScanFoodView> {
       ),
     );
   }
+
+  void _showImageSourceOptions(BuildContext context, ScanFoodViewModel vm) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo),
+              title: const Text("Galería"),
+              onTap: () {
+                Navigator.pop(context);
+                vm.pickImageFromGallery();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Cámara"),
+              onTap: () {
+                Navigator.pop(context);
+                vm.pickImageFromCamera();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class OvalBottomClipper extends CustomClipper<Path> {
@@ -197,15 +118,12 @@ class OvalBottomClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height * 0.75);
-    path.quadraticBezierTo(
-        size.width / 2, size.height, size.width, size.height * 0.75);
+    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height * 0.75);
     path.lineTo(size.width, 0);
     path.close();
     return path;
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
-  }
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

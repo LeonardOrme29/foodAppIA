@@ -39,4 +39,37 @@ class FoodItem {
       throw Exception('Failed to load ingredients');
     }
   }
+
+  static Future<FoodItem> createFoodItem({
+    //required String name,
+    //required String category,
+    required String imageUrl,
+  }) async {
+    final url = Uri.parse("${AppEnvironment.apiBaseUrl}/dishes/upload");
+
+    final Map<String, dynamic> payload = {
+      "name": "IA name",
+      "category": "IA category",
+      "url_image": imageUrl,
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return FoodItem.fromJson(data);
+      } else {
+        throw Exception("Error al crear alimento: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      throw Exception("Excepción en createFoodItem: $e");
+    }
+  }
 }
