@@ -76,12 +76,16 @@ class HomeView extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              const Text("Busquedas Destacadas", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                "Búsquedas Destacadas",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 10),
               SizedBox(
-                height: 140,
+                height: 160, // Altura para que quepa imagen + texto
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   itemCount: viewModel.featuredSearches.length,
                   itemBuilder: (context, index) {
                     return SizedBox(

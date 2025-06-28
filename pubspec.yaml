@@ -67,12 +67,8 @@ flutter:
 
   assets:
     - lib/assets/logo.png
+    - lib/assets/icono.png
     - lib/assets/google-icon.png
-    - lib/assets/lomo-saltado.png
-    - lib/assets/ceviche.png
-    - lib/assets/aji-gallina.png
-    - lib/assets/papa-huancaina.png
-    - lib/assets/anticuchos.png
     - lib/assets/home-banner.png
     - lib/assets/user.jpg
 
