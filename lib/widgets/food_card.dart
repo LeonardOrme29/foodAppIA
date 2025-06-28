@@ -4,6 +4,7 @@ import '../models/food_item.dart';
 
 class FoodCard extends StatelessWidget {
   final FoodItem item;
+
   const FoodCard({super.key, required this.item});
 
   @override
@@ -18,12 +19,30 @@ class FoodCard extends StatelessWidget {
         );
       },
       child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.network(item.imageUrl, fit: BoxFit.cover),
+            // Imagen con tamaño fijo
+            SizedBox(
+              height: 100,
+              child: Image.network(
+                item.imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            // Texto con padding y truncamiento si es largo
             Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(item.name),
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                item.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
