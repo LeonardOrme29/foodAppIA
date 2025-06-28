@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
-import '../widgets/success_dialog.dart'; // Asegúrate de importar el SuccessDialog
+import '../widgets/success_dialog.dart';
 
 class LoginMailView extends StatelessWidget {
   const LoginMailView({super.key});
@@ -72,8 +72,7 @@ class LoginMailView extends StatelessWidget {
                       builder: (context) => SuccessDialog(
                         message: '¡Bienvenido ${vm.user?.firstname}!',
                         onConfirm: () {
-                          Navigator.of(context).pop(); // Cierra el diálogo
-                          // Cambia a la vista principal o dashboard
+                          Navigator.of(context).pop();
                           Navigator.pushReplacementNamed(context, '/home');
                         },
                       ),

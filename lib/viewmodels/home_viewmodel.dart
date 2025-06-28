@@ -25,7 +25,7 @@ class HomeViewModel extends ChangeNotifier {
       final items = data.map((item) => FoodItem.fromJson(item)).toList();
       dishes=items.toList();
       featuredSearches = items.take(5).toList();
-      mySearches = items.take(6).toList();
+      mySearches = items.take(10).toList();
       notifyListeners();
     } else {
       throw Exception('Failed to load dishes');
