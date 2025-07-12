@@ -13,13 +13,13 @@ Además de categorías estándar de comida, esta app incorpora reconocimiento es
 - Anticuchos  
 ...entre otros.
 
----
 
 ## 📱 Capturas de pantalla
 
-![Vista del sistema](https://drive.google.com/file/d/1wjC8mRKUOcu5PNG1NLRGM0jEnJPeFr9D/view?usp=drive_link)
+<p align="center">
+  <img src="https://drive.google.com/uc?id=1wjC8mRKUOcu5PNG1NLRGM0jEnJPeFr9D" width="250"/>
+</p>
 
----
 
 ## 🛠️ Tecnologías utilizadas
 
