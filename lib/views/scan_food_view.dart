@@ -1,16 +1,35 @@
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import '../models/user_model.dart';
+import '../services/user_preferences.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/scan_food_viewmodel.dart';
 
-class ScanFoodView extends StatelessWidget {
+class ScanFoodView extends StatefulWidget {
   const ScanFoodView({super.key});
+
+  @override
+  State<ScanFoodView> createState() => _ScanFoodViewState();
+}
+
+class _ScanFoodViewState extends State<ScanFoodView> {
+  UserModel? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserOnce();
+  }
+
+  Future<void> _loadUserOnce() async {
+    final loadedUser = await loadUser();
+    setState(() {
+      user = loadedUser;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final vm = Provider.of<ScanFoodViewModel>(context);
-
     const Color primaryColor = Color(0xFF0A543D);
     const Color buttonColor = Color(0xFF4CAF50);
     const Color frameColor = Colors.white;
@@ -40,6 +59,7 @@ class ScanFoodView extends StatelessWidget {
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(height: 32),
+
                     GestureDetector(
                       onTap: () => _showImageSourceOptions(context, vm),
                       child: Container(
@@ -47,32 +67,39 @@ class ScanFoodView extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: frameColor,
                           borderRadius: BorderRadius.circular(12.0),
-                          border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                          border: Border.all(
+                              color: Colors.grey.shade400, width: 1.5),
                         ),
                         child: vm.imagePreviewWidget(),
                       ),
                     ),
+
                     const SizedBox(height: 40),
                     SizedBox(
                       width: double.infinity,
-                      height: 45, 
+                      height: 45,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: buttonColor,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20), // Mayor padding
-                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 20),
+                          textStyle: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
-                        onPressed: vm.isLoading
-                            ? null
-                            : () => vm.uploadImage(context),
+                        onPressed:
+                        vm.isLoading ? null : () => vm.uploadImage(context),
                         child: vm.isLoading
                             ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                            : const Text('Subir', style: TextStyle(color: Colors.white)),
+                            : const Text('Subir',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
+
                     const SizedBox(height: 50),
                   ],
                 ),
@@ -118,7 +145,8 @@ class OvalBottomClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     final path = Path();
     path.lineTo(0, size.height * 0.75);
-    path.quadraticBezierTo(size.width / 2, size.height, size.width, size.height * 0.75);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height * 0.75);
     path.lineTo(size.width, 0);
     path.close();
     return path;

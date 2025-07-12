@@ -43,7 +43,7 @@ class RegisterViewmodel extends ChangeNotifier {
     _errorMessage = '';
     notifyListeners();
 
-    final url = Uri.parse('${AppEnvironment.apiBaseUrl}/register/');
+    final url = Uri.parse('${AppEnvironment.apiBaseUrl}/register');
 
     final Map<String, String> body = {
       'firstname': firstname,

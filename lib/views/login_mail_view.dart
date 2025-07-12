@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../widgets/success_dialog.dart';
+import '../services/user_preferences.dart'; // 👈 Asegúrate de que esté bien la ruta
+import '../models/user_model.dart'; // 👈 Si no lo tienes ya
 
 class LoginMailView extends StatelessWidget {
   const LoginMailView({super.key});
@@ -55,22 +57,31 @@ class LoginMailView extends StatelessWidget {
                 onChanged: vm.setPassword,
               ),
               const SizedBox(height: 20),
+
+              // Mostrar errores si hay
               if (vm.errorMessage.isNotEmpty)
                 Text(
                   vm.errorMessage,
                   style: const TextStyle(color: Colors.redAccent),
                 ),
+
               const SizedBox(height: 10),
+
+              // Botón de login
               vm.isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : ElevatedButton(
                 onPressed: () async {
                   final success = await vm.loginUser();
-                  if (success) {
+                  if (success && vm.user != null) {
+                    // 👇 Guardar el usuario antes de ir al home
+                    await saveUser(vm.user!);
+
+                    // Mostrar diálogo de bienvenida
                     showDialog(
                       context: context,
                       builder: (context) => SuccessDialog(
-                        message: '¡Bienvenido ${vm.user?.firstname}!',
+                        message: '¡Bienvenido ${vm.user!.firstname}!',
                         onConfirm: () {
                           Navigator.of(context).pop();
                           Navigator.pushReplacementNamed(context, '/home');

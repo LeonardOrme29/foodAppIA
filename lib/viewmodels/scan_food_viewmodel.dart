@@ -9,8 +9,9 @@ import 'package:food_app/views/dish_details_view.dart';
 import 'package:food_app/models/app_Enviroment.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:http_parser/http_parser.dart';
+import '../services/user_preferences.dart'; // ✅ Importar shared
+import '../models/user_model.dart';         // ✅ Importar modelo de usuario
 
 class ScanFoodViewModel extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
@@ -25,6 +26,7 @@ class ScanFoodViewModel extends ChangeNotifier {
   // Image picking
   Future<void> pickImageFromGallery() => _pickImage(ImageSource.gallery);
   Future<void> pickImageFromCamera() => _pickImage(ImageSource.camera);
+
 
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -68,7 +70,7 @@ class ScanFoodViewModel extends ChangeNotifier {
     }
   }
 
-  // Upload logic (mock)
+  // Upload logic
   Future<void> uploadImage(BuildContext context) async {
     final bool noImageSelected = (kIsWeb && _selectedImageBytes == null) ||
         (!kIsWeb && _selectedImageFile == null);
@@ -98,7 +100,7 @@ class ScanFoodViewModel extends ChangeNotifier {
       return;
     }
 
-    // 🔍 Paso 1: Predicción
+    // Paso 1: Predicción
     final predictionResult = await predictFood(imageBytes);
 
     if (predictionResult == null || predictionResult['prediction'] == null) {
@@ -113,6 +115,7 @@ class ScanFoodViewModel extends ChangeNotifier {
     final String predictedCategory = predictionResult['prediction'];
     final String confidence = predictionResult['confidence'];
 
+    // Paso 2: Subir imagen
     if (kIsWeb && _selectedImageBytes != null) {
       imageUrl = await ImageUploadService().uploadImageBytesToImgBB(_selectedImageBytes!);
     } else if (!kIsWeb && _selectedImageFile != null) {
@@ -126,8 +129,28 @@ class ScanFoodViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Imagen subida exitosamente: $imageUrl')),
       );
-      FoodItem item=await FoodItem.createFoodItem(category:predictedCategory,accuracy:confidence,imageUrl: imageUrl,userId: 1);
+
+      // ✅ Paso 3: Obtener el ID del usuario desde SharedPreferences
+      final user = await loadUser();
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Usuario no encontrado')),
+        );
+        return;
+      }
+
+      print("👤 Usuario ID: ${user.id}");
+
+      // ✅ Paso 4: Crear FoodItem con userId
+      FoodItem item = await FoodItem.createFoodItem(
+        category: predictedCategory,
+        accuracy: confidence,
+        imageUrl: imageUrl,
+        userId: user.id,
+      );
+
       await Future.delayed(const Duration(seconds: 2));
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -141,7 +164,7 @@ class ScanFoodViewModel extends ChangeNotifier {
     }
   }
 
-  //prediccion
+  // predicción
   Future<Map<String, dynamic>?> predictFood(Uint8List imageBytes) async {
     final uri = Uri.parse('${AppEnvironment.apiBaseUrl}/predict');
 

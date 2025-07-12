@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginViewModel extends ChangeNotifier {
   UserModel? _user;
+  int _id = 1;
   String _email = '';
   String _password = '';
   bool _isLoading = false;
@@ -32,7 +33,7 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       final response = await http.post(
-        Uri.parse('${AppEnvironment.apiBaseUrl}/login/'),
+        Uri.parse('${AppEnvironment.apiBaseUrl}/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': _email, 'password': _password}),
       );
@@ -40,6 +41,7 @@ class LoginViewModel extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         _user = UserModel(
+          id:data['id'] ?? 1,
           firstname: data['firstname'] ?? '',
           lastname: data['lastname'] ?? '',
           email: data['email'],
@@ -74,6 +76,7 @@ class LoginViewModel extends ChangeNotifier {
 
   void loginWithGoogle() async {
     _user = UserModel(
+      id:1,
       firstname: 'Usuario Google',
       lastname: 'Google',
       email: 'google@example.com',
@@ -85,6 +88,7 @@ class LoginViewModel extends ChangeNotifier {
 
   void loginWithFacebook() async {
     _user = UserModel(
+      id:1,
       firstname: 'Usuario Facebook',
       lastname: 'Facebook',
       email: 'facebook@example.com',
@@ -96,6 +100,7 @@ class LoginViewModel extends ChangeNotifier {
 
   void loginWithEmail() async {
     _user = UserModel(
+      id:1,
       firstname: 'Usuario Email',
       lastname: 'Mail',
       email: 'email@example.com',
