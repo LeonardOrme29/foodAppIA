@@ -1,6 +1,6 @@
 # 🍽️ Food Classifier App – Flutter Frontend
 
-Aplicación móvil desarrollada en **Flutter** que permite clasificar imágenes de comidas utilizando modelos de aprendizaje profundo. Una funcionalidad destacada es su capacidad para identificar **platos típicos peruanos**, brindando un valor diferencial frente a clasificadores genéricos.
+Aplicación móvil desarrollada en **Flutter** que permite clasificar imágenes de comidas utilizando modelos de aprendizaje profundo, modelo de **Redes Neuronales Convolucionales (CNN)**, usando el modelo **MobileNetv2**. Una funcionalidad destacada es su capacidad para identificar **platos típicos peruanos**, brindando un valor diferencial frente a clasificadores genéricos.
 
 ## 🇵🇪 Valor añadido
 
