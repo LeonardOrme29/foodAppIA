@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/user_preferences.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -55,9 +56,14 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Cerrar Sesión'),
-            onTap: () {
-              // Lógica para logout
-              Navigator.pop(context);
+            onTap: () async {
+              Navigator.pop(context); // Cierra el drawer
+              await clearUser(); // ✅ Limpia el SharedPreferences
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/', // Puedes redirigir a login si prefieres
+                    (Route<dynamic> route) => false,
+              );
             },
           ),
         ],

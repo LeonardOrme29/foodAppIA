@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import '../widgets/login_button.dart';
 import '../views/register_view.dart';
+import '../services/user_preferences.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -47,8 +48,13 @@ class LoginView extends StatelessWidget {
               text: 'Conectar con correo',
               icon: Icons.email,
               //onPressed: vm.loginWithEmail,
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
+              onPressed: () async {
+                final user = await loadUser();
+                if (user != null) {
+                  Navigator.pushReplacementNamed(context, '/home'); // ✅ Ya hay sesión
+                } else {
+                  Navigator.pushNamed(context, '/login'); // 🔐 No hay sesión previa
+                }
               },
             ),
 

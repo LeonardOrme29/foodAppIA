@@ -1,9 +1,12 @@
+import 'dart:convert';
 class UserModel {
+  final int id;
   final String firstname;
   final String lastname;
   final String email;
   final String password;
   UserModel({
+    required this.id,
     required this.firstname,
     required this.lastname,
     required this.email,
@@ -11,6 +14,7 @@ class UserModel {
   });
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'firstname': firstname,
     'lastname': lastname,
     'email': email,
@@ -18,9 +22,10 @@ class UserModel {
   };
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    firstname: json['firstname'],
-    lastname: json['lastname'],
-    email: json['email'],
-    password: json['password'],
+    id: json['id'] is int ? json['id'] : int.parse(json['id'].toString()),
+    firstname: json['firstname'] ?? '',
+    lastname: json['lastname'] ?? '',
+    email: json['email'] ?? '',
+    password: json['password'] ?? '',
   );
 }
